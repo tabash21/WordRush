@@ -2,23 +2,23 @@ import { ThemedText } from "@/components/themed-text";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
-interface GameTurnEndProps {
-  currentGroup: number;
-  turnScore: number;
-  totalGroupScore: number;
-  correctWords: string[];
-  failedWords: string[];
-  onProceedToNextGroup: () => void;
-}
+import { useGameContext, useTurnContext } from "../../context/GameContext";
 
-export function GameTurnEnd({
-  currentGroup,
-  turnScore,
-  totalGroupScore,
-  correctWords,
-  failedWords,
-  onProceedToNextGroup,
-}: GameTurnEndProps) {
+export function GameTurnEnd() {
+  const { currentGroup, currentWordIndex, currentWords, onProceedToNextGroup } = useGameContext();
+  const { turnScore, swipeHistory } = useTurnContext();
+
+  const startIndex = currentWordIndex - swipeHistory.length;
+  const correctWords: string[] = [];
+  const failedWords: string[] = [];
+
+  swipeHistory.forEach((swipe, i) => {
+    const word = currentWords[startIndex + i];
+    if (word) {
+      if (swipe === "right") correctWords.push(word);
+      else failedWords.push(word);
+    }
+  });
   return (
     <View style={styles.container}>
       {/* Header section */}

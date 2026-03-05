@@ -1,20 +1,11 @@
 import { ThemedText } from "@/components/themed-text";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { useGameContext } from "../../context/GameContext";
 
-interface GameReadyProps {
-  currentGroup: number;
-  groupScores: number[];
-  targetPoints: number;
-  onStartTurn: () => void;
-}
-
-export function GameReady({
-  currentGroup,
-  groupScores,
-  targetPoints,
-  onStartTurn,
-}: GameReadyProps) {
+export function GameReady() {
+  const { currentGroup, groupScores, settings, onStartTurn } = useGameContext();
+  const targetPoints = settings.targetPoints;
   return (
     <View style={styles.centerContent}>
       <View style={styles.headerContainer}>

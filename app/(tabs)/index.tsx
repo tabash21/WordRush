@@ -2,6 +2,7 @@ import { GameSetup } from "@/components/game/GameSetup";
 import { GameTurn } from "@/components/game/GameTurn";
 import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { ThemedView } from "@/components/themed-view";
+import { GameContext, TurnProvider } from "@/context/GameContext";
 import { useGameLoop } from "@/hooks/useGameLoop";
 import { GameState } from "@/types/game";
 import { Image } from "expo-image";
@@ -24,16 +25,12 @@ export default function HomeScreen() {
     currentGroup,
     currentWords,
     currentWordIndex,
-    turnScore,
-    timeLeft,
-    pan,
-    panResponder,
-    swipeHistory,
     startGame,
     startTurn,
+    endTurn,
+    handleWordSwipe,
     proceedToNextGroup,
     returnToSetup,
-    undoSwipe,
   } = useGameLoop();
 
   const navigation = useNavigation() as any;
@@ -68,27 +65,32 @@ export default function HomeScreen() {
 
     return (
       <ThemedView style={styles.gameContainer}>
-        <GameTurn
-          gameState={gameState}
-          settings={settings}
-          currentGroup={currentGroup}
-          groupScores={groupScores}
-          timeLeft={timeLeft}
-          turnScore={turnScore}
-          currentWord={currentWord}
-          pan={pan}
-          panResponderHandlers={panResponder.panHandlers}
-          swipeHistory={swipeHistory}
-          currentWords={currentWords}
-          currentWordIndex={currentWordIndex}
-          isDark={isDark}
-          chipBorderColor={chipBorderColor}
-          chipBgActive={chipBgActive}
-          onStartTurn={startTurn}
-          onProceedToNextGroup={proceedToNextGroup}
-          onReturnToSetup={returnToSetup}
-          onUndo={undoSwipe}
-        />
+        <GameContext.Provider
+          value={{
+            settings,
+            gameState,
+            currentGroup,
+            groupScores,
+            currentWord,
+            currentWords,
+            currentWordIndex,
+            isDark,
+            chipBorderColor,
+            chipBgActive,
+            onStartTurn: startTurn,
+            onProceedToNextGroup: proceedToNextGroup,
+            onReturnToSetup: returnToSetup,
+          }}
+        >
+          <TurnProvider
+            gameState={gameState}
+            roundTimer={settings.roundTimer}
+            onTurnEnd={endTurn}
+            onWordSwipe={handleWordSwipe}
+          >
+            <GameTurn />
+          </TurnProvider>
+        </GameContext.Provider>
       </ThemedView>
     );
   }

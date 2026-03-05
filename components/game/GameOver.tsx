@@ -1,13 +1,10 @@
 import { ThemedText } from "@/components/themed-text";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
-interface GameOverProps {
-  groupScores: number[];
-  chipBgActive: string;
-  onReturnToSetup: () => void;
-}
+import { useGameContext } from "../../context/GameContext";
 
-export function GameOver({ groupScores, chipBgActive, onReturnToSetup }: GameOverProps) {
+export function GameOver() {
+  const { groupScores, chipBgActive, onReturnToSetup } = useGameContext();
   const winnerIndex = groupScores.indexOf(Math.max(...groupScores));
 
   return (

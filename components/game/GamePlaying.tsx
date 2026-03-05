@@ -5,31 +5,15 @@ import { useEffect, useRef } from "react";
 import { Animated, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-interface GamePlayingProps {
-  timeLeft: number;
-  roundTimer: number;
-  turnScore: number;
-  currentWord: string;
-  pan: Animated.ValueXY;
-  panResponderHandlers: any;
-  isDark: boolean;
-  chipBorderColor: string;
-  onUndo: () => void;
-  canUndo: boolean;
-}
+import { useGameContext, useTurnContext } from "../../context/GameContext";
 
-export function GamePlaying({
-  timeLeft,
-  roundTimer,
-  turnScore,
-  currentWord,
-  pan,
-  panResponderHandlers,
-  isDark,
-  chipBorderColor,
-  onUndo,
-  canUndo,
-}: GamePlayingProps) {
+export function GamePlaying() {
+  const { settings, currentWord, isDark, chipBorderColor } = useGameContext();
+  const { timeLeft, turnScore, pan, panResponderHandlers, undoSwipe, swipeHistory } =
+    useTurnContext();
+
+  const roundTimer = settings.roundTimer;
+  const canUndo = swipeHistory.length > 0;
   // Interpolate side swipe to create dynamic border colors indicating the action
   const dynamicBorderColor = pan.x.interpolate({
     inputRange: [-100, 0, 100],
@@ -136,7 +120,7 @@ export function GamePlaying({
 
       <View style={styles.undoContainer}>
         {canUndo && (
-          <TouchableOpacity onPress={onUndo} style={styles.undoButton}>
+          <TouchableOpacity onPress={undoSwipe} style={styles.undoButton}>
             <IconSymbol size={24} name="arrow.uturn.backward" color={isDark ? "#fff" : "#000"} />
             <ThemedText style={{ marginLeft: 8, fontWeight: "600" }}>Undo Swipe</ThemedText>
           </TouchableOpacity>
