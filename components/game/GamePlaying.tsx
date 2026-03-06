@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
     position: "absolute",
-    bottom: 80,
+    bottom: 40,
     paddingHorizontal: 40,
     zIndex: 10,
   },
