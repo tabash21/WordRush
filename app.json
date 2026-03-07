@@ -4,27 +4,25 @@
     "slug": "aliRush",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/aliRush-round-logo.jpg",
+    "icon": "./assets/images/app-logo.png",
     "scheme": "alirush",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/aliRush-round-logo.jpg",
-        "backgroundImage": "./assets/images/aliRush-round-logo.jpg",
-        "monochromeImage": "./assets/images/aliRush-round-logo.jpg"
+        "foregroundImage": "./assets/images/app-logo.png",
+        "backgroundImage": "./assets/images/app-logo.png",
+        "monochromeImage": "./assets/images/app-logo.png"
       },
-      "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "package": "com.tal_ben_shushan.aliRush"
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/aliRush-round-logo.jpg"
+      "favicon": "./assets/images/app-logo.png"
     },
     "plugins": [
       "expo-router",
