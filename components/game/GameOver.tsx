@@ -38,7 +38,7 @@ export function GameOver() {
           {!isDraw && <ThemedText style={styles.winsText}>
             WINS!
           </ThemedText>}
-        </View>z
+        </View>
       </View>
 
       {/* Scoreboard Card */}
