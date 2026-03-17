@@ -41,6 +41,7 @@ export interface TurnContextType {
   pan: Animated.ValueXY;
   panResponderHandlers: any;
   undoSwipe: () => void;
+  toggleSwipe: (index: number) => void;
 }
 
 export const TurnContext = createContext<TurnContextType | undefined>(undefined);
@@ -57,6 +58,7 @@ interface TurnProviderProps {
   roundTimer: number;
   onTurnEnd: (score: number) => void;
   onWordSwipe: (dir: "left" | "right", isUndo?: boolean) => void;
+  onToggleSwipe?: (diff: number) => void;
 }
 
 export function TurnProvider({
@@ -65,6 +67,7 @@ export function TurnProvider({
   roundTimer,
   onTurnEnd,
   onWordSwipe,
+  onToggleSwipe,
 }: TurnProviderProps) {
   const [turnScore, setTurnScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
@@ -141,6 +144,22 @@ export function TurnProvider({
     onWordSwipe(lastSwipe, true);
   };
 
+  const toggleSwipe = (index: number) => {
+    setSwipeHistory((prev) => {
+      const newHistory = [...prev];
+      const oldSwipe = newHistory[index];
+      const newSwipe = oldSwipe === "right" ? "left" : "right";
+      newHistory[index] = newSwipe;
+
+      const scoreDiff = newSwipe === "right" ? 2 : -2;
+      setTurnScore((s) => s + scoreDiff);
+      turnScoreRef.current += scoreDiff;
+      onToggleSwipe?.(scoreDiff);
+
+      return newHistory;
+    });
+  };
+
   return (
     <TurnContext.Provider
       value={{
@@ -150,6 +169,7 @@ export function TurnProvider({
         pan,
         panResponderHandlers,
         undoSwipe,
+        toggleSwipe,
       }}
     >
       {children}

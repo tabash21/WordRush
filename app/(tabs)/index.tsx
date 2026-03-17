@@ -32,6 +32,7 @@ export default function HomeScreen() {
     handleWordSwipe,
     proceedToNextGroup,
     returnToSetup,
+    updateGroupScore,
   } = useGameLoop();
 
   const navigation = useNavigation() as any;
@@ -88,6 +89,7 @@ export default function HomeScreen() {
             roundTimer={settings.roundTimer}
             onTurnEnd={endTurn}
             onWordSwipe={handleWordSwipe}
+            onToggleSwipe={updateGroupScore}
           >
             <GameTurn />
           </TurnProvider>

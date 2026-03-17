@@ -6,19 +6,19 @@ import { useGameContext, useTurnContext } from "../../context/GameContext";
 
 export function GameTurnEnd() {
   const { currentGroup, currentWordIndex, currentWords, onProceedToNextGroup } = useGameContext();
-  const { turnScore, swipeHistory } = useTurnContext();
+  const { turnScore, swipeHistory, toggleSwipe } = useTurnContext();
 
   const startIndex = currentWordIndex - swipeHistory.length;
-  const correctWords: string[] = [];
-  const failedWords: string[] = [];
 
-  swipeHistory.forEach((swipe, i) => {
-    const word = currentWords[startIndex + i];
-    if (word) {
-      if (swipe === "right") correctWords.push(word);
-      else failedWords.push(word);
-    }
-  });
+  const wordEntries = swipeHistory.map((swipe, i) => ({
+    originalIndex: i,
+    word: currentWords[startIndex + i],
+    swipe,
+  }));
+
+  const correctWords = wordEntries.filter((e) => e.swipe === "right");
+  const failedWords = wordEntries.filter((e) => e.swipe === "left");
+
   return (
     <View style={styles.container}>
       {/* Header section */}
@@ -45,10 +45,19 @@ export function GameTurnEnd() {
                 Guessed Correctly ({correctWords.length})
               </ThemedText>
             </View>
-            {correctWords.map((word, index) => (
-              <View key={index} style={[styles.wordCard, styles.correctWordCard]}>
-                <ThemedText style={[styles.wordText, styles.correctWordText]}>{word}</ThemedText>
-                <MaterialCommunityIcons name="check" size={16} color="#2ecc71" />
+            {correctWords.map((entry) => (
+              <View key={entry.originalIndex} style={[styles.wordCard, styles.correctWordCard]}>
+                <View style={styles.wordInfo}>
+                  <MaterialCommunityIcons name="check" size={16} color="#2ecc71" />
+                  <ThemedText style={[styles.wordText, styles.correctWordText]}>{entry.word}</ThemedText>
+                </View>
+                <TouchableOpacity
+                  onPress={() => toggleSwipe(entry.originalIndex)}
+                  style={styles.toggleButton}
+                  activeOpacity={0.6}
+                >
+                  <MaterialCommunityIcons name="swap-horizontal" size={20} color="#888" />
+                </TouchableOpacity>
               </View>
             ))}
           </View>
@@ -61,10 +70,19 @@ export function GameTurnEnd() {
               <MaterialCommunityIcons name="close-circle" size={20} color="#e74c3c" />
               <ThemedText style={styles.listTitle}>Failed Words ({failedWords.length})</ThemedText>
             </View>
-            {failedWords.map((word, index) => (
-              <View key={index} style={[styles.wordCard, styles.failedWordCard]}>
-                <ThemedText style={[styles.wordText, styles.failedWordText]}>{word}</ThemedText>
-                <MaterialCommunityIcons name="close" size={16} color="#e74c3c" />
+            {failedWords.map((entry) => (
+              <View key={entry.originalIndex} style={[styles.wordCard, styles.failedWordCard]}>
+                <View style={styles.wordInfo}>
+                  <MaterialCommunityIcons name="close" size={16} color="#e74c3c" />
+                  <ThemedText style={[styles.wordText, styles.failedWordText]}>{entry.word}</ThemedText>
+                </View>
+                <TouchableOpacity
+                  onPress={() => toggleSwipe(entry.originalIndex)}
+                  style={styles.toggleButton}
+                  activeOpacity={0.6}
+                >
+                  <MaterialCommunityIcons name="swap-horizontal" size={20} color="#888" />
+                </TouchableOpacity>
               </View>
             ))}
           </View>
@@ -149,10 +167,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingLeft: 16,
+    paddingRight: 8,
+    paddingVertical: 10,
     borderRadius: 12,
     marginBottom: 8,
+  },
+  wordInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    flex: 1,
+  },
+  toggleButton: {
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: "rgba(255, 255, 255, 0.05)",
   },
   correctWordCard: {
     backgroundColor: "rgba(46, 204, 113, 0.15)",

@@ -66,6 +66,14 @@ export function useGameLoop() {
     setGameState(GameState.Setup);
   };
 
+  const updateGroupScore = (diff: number) => {
+    setGroupScores((prev) => {
+      const newScores = [...prev];
+      newScores[currentGroup] += diff;
+      return newScores;
+    });
+  };
+
   return {
     settings,
     setSettings,
@@ -80,5 +88,6 @@ export function useGameLoop() {
     handleWordSwipe,
     proceedToNextGroup,
     returnToSetup,
+    updateGroupScore,
   };
 }
