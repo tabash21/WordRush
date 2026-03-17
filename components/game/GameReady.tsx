@@ -1,4 +1,4 @@
-import { ThemedText } from "@/components/themed-text";
+import { ThemedText } from "@/components/common/themed-text";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useGameContext } from "../../context/GameContext";
@@ -9,28 +9,45 @@ export function GameReady() {
   return (
     <View style={styles.centerContent}>
       <View style={styles.headerContainer}>
-        <ThemedText style={styles.teamTitle}>TEAM {currentGroup + 1}</ThemedText>
+        <ThemedText style={styles.teamTitle}>
+          TEAM {currentGroup + 1}
+        </ThemedText>
         <ThemedText style={styles.mainTitle}>Get Ready!</ThemedText>
       </View>
 
       <View style={styles.scoreboardCard}>
         <View style={styles.scoreboardHeader}>
           <ThemedText style={styles.scoreboardLabel}>SCOREBOARD</ThemedText>
-          <ThemedText style={styles.targetLabel}>Target: {targetPoints}</ThemedText>
+          <ThemedText style={styles.targetLabel}>
+            Target: {targetPoints}
+          </ThemedText>
         </View>
 
         <ScrollView style={styles.scoreboardContent} nestedScrollEnabled={true}>
           {groupScores.map((score, index) => {
             const isActive = index === currentGroup;
-            const progressPercentage = Math.min((score / targetPoints) * 100, 100);
+            const progressPercentage = Math.min(
+              (score / targetPoints) * 100,
+              100,
+            );
 
             return (
               <View key={index} style={styles.teamRow}>
                 <View style={styles.teamRowHeader}>
-                  <ThemedText style={[styles.teamNameText, isActive && styles.activeTeamText]}>
+                  <ThemedText
+                    style={[
+                      styles.teamNameText,
+                      isActive && styles.activeTeamText,
+                    ]}
+                  >
                     Team {index + 1}
                   </ThemedText>
-                  <ThemedText style={[styles.teamScoreText, isActive && styles.activeScoreText]}>
+                  <ThemedText
+                    style={[
+                      styles.teamScoreText,
+                      isActive && styles.activeScoreText,
+                    ]}
+                  >
                     {score}/{targetPoints}
                   </ThemedText>
                 </View>
@@ -57,8 +74,14 @@ export function GameReady() {
             activeOpacity={0.8}
           >
             <View style={styles.actionInnerCircle}>
-              <MaterialCommunityIcons name="gesture-tap" size={56} color="#fff" />
-              <ThemedText style={styles.actionButtonText}>TAP TO START</ThemedText>
+              <MaterialCommunityIcons
+                name="gesture-tap"
+                size={56}
+                color="#fff"
+              />
+              <ThemedText style={styles.actionButtonText}>
+                TAP TO START
+              </ThemedText>
             </View>
           </TouchableOpacity>
         </View>
@@ -66,7 +89,11 @@ export function GameReady() {
 
       <View style={styles.howToPlayCard}>
         <View style={styles.howToPlayIconBox}>
-          <MaterialCommunityIcons name="lightbulb-outline" size={24} color="#e74c3c" />
+          <MaterialCommunityIcons
+            name="lightbulb-outline"
+            size={24}
+            color="#e74c3c"
+          />
         </View>
         <View style={styles.howToPlayTextContainer}>
           <ThemedText style={styles.howToPlayTitle}>HOW TO PLAY</ThemedText>

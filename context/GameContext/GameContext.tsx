@@ -1,7 +1,28 @@
-import { useState } from "react";
-import { GameSettings, GameState, Language } from "../types/game";
+import { createContext, ReactNode, useContext, useState } from "react";
+import { useColorScheme } from "react-native";
+import { GameSettings, GameState, Language } from "../../types/game";
+import { GameContextType } from "./types";
 
-export function useGameLoop() {
+export const GameContext = createContext<GameContextType | undefined>(undefined);
+
+export function useGameContext() {
+  const context = useContext(GameContext);
+  if (!context)
+    throw new Error("useGameContext must be used within GameContext.Provider");
+  return context;
+}
+
+interface GameProviderProps {
+  children: ReactNode;
+}
+
+export function GameProvider({ children }: GameProviderProps) {
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === "dark";
+  const primaryRed = "#e74c3c";
+  const chipBorderColor = isDark ? "#444" : "#ccc";
+  const chipBgActive = primaryRed;
+
   const [settings, setSettings] = useState<GameSettings>({
     groupCount: 2,
     language: Language.English,
@@ -88,22 +109,37 @@ export function useGameLoop() {
     });
   };
 
-  return {
+  const currentWord =
+    currentWordIndex < currentWords.length
+      ? currentWords[currentWordIndex]
+      : "No more words!";
+
+  const value: GameContextType = {
     settings,
     setSettings,
     gameState,
-    groupScores,
     currentGroup,
+    groupScores,
+    currentWord,
     currentWords,
     currentWordIndex,
-    startGame,
-    startTurn,
-    endTurn,
-    handleWordSwipe,
-    proceedToNextGroup,
-    returnToSetup,
-    updateGroupScore,
+    isDark,
+    chipBorderColor,
+    chipBgActive,
+    onStartTurn: startTurn,
+    onEndTurn: endTurn,
+    onWordSwipe: handleWordSwipe,
+    onUpdateGroupScore: updateGroupScore,
+    onProceedToNextGroup: proceedToNextGroup,
+    onReturnToSetup: returnToSetup,
     lastWordWinner,
     assignLastWordPoint,
+    onStartGame: startGame,
   };
+
+  return (
+    <GameContext.Provider value={value}>
+      {children}
+    </GameContext.Provider>
+  );
 }

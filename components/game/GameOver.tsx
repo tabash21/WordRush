@@ -1,6 +1,12 @@
-import { ThemedText } from "@/components/themed-text";
+import { ThemedText } from "@/components/common/themed-text";
 import { Ionicons } from "@expo/vector-icons";
-import { ScrollView, StyleSheet, TouchableOpacity, View, useColorScheme } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  useColorScheme,
+} from "react-native";
 
 import { useGameContext } from "../../context/GameContext";
 
@@ -27,7 +33,12 @@ export function GameOver() {
     <View style={styles.container}>
       {/* Header Section */}
       <View style={styles.header}>
-        <View style={[styles.trophyContainer, { backgroundColor: isDark ? "#443C22" : "#FFF4E0" }]}>
+        <View
+          style={[
+            styles.trophyContainer,
+            { backgroundColor: isDark ? "#443C22" : "#FFF4E0" },
+          ]}
+        >
           <Ionicons name="trophy" size={50} color={winnerColor} />
         </View>
         <ThemedText style={styles.gameOverText}>GAME OVER</ThemedText>
@@ -35,16 +46,19 @@ export function GameOver() {
           <ThemedText style={[styles.winnerName, { color: winnerColor }]}>
             {isDraw ? "ITS A DRAW!" : winners[0].name.toUpperCase()}
           </ThemedText>
-          {!isDraw && <ThemedText style={styles.winsText}>
-            WINS!
-          </ThemedText>}
+          {!isDraw && <ThemedText style={styles.winsText}>WINS!</ThemedText>}
         </View>
       </View>
 
       {/* Scoreboard Card */}
       <View style={[styles.card, { backgroundColor: cardBg }]}>
         <ThemedText style={styles.cardTitle}>Final Scoreboard</ThemedText>
-        <View style={[styles.divider, { backgroundColor: isDark ? "#444" : "#EEE" }]} />
+        <View
+          style={[
+            styles.divider,
+            { backgroundColor: isDark ? "#444" : "#EEE" },
+          ]}
+        />
 
         <ScrollView style={styles.scoreboardContent} nestedScrollEnabled={true}>
           {rankedScores.map((item, index) => {
@@ -60,18 +74,26 @@ export function GameOver() {
                 ]}
               >
                 <View style={styles.rowLeft}>
-                  <ThemedText style={[styles.rank, isWinner && styles.whiteText]}>
+                  <ThemedText
+                    style={[styles.rank, isWinner && styles.whiteText]}
+                  >
                     {index + 1}.
                   </ThemedText>
-                  <ThemedText style={[styles.groupName, isWinner && styles.whiteText]}>
+                  <ThemedText
+                    style={[styles.groupName, isWinner && styles.whiteText]}
+                  >
                     {item.name}
                   </ThemedText>
                 </View>
                 <View style={styles.rowRight}>
-                  <ThemedText style={[styles.scoreValue, isWinner && styles.whiteText]}>
+                  <ThemedText
+                    style={[styles.scoreValue, isWinner && styles.whiteText]}
+                  >
                     {item.score}
                   </ThemedText>
-                  <ThemedText style={[styles.ptsLabel, isWinner && styles.whiteText]}>
+                  <ThemedText
+                    style={[styles.ptsLabel, isWinner && styles.whiteText]}
+                  >
                     PTS
                   </ThemedText>
                 </View>
@@ -86,7 +108,12 @@ export function GameOver() {
         style={[styles.playAgainButton, { backgroundColor: primaryRed }]}
         onPress={onReturnToSetup}
       >
-        <Ionicons name="refresh-outline" size={24} color="#FFF" style={{ marginRight: 10 }} />
+        <Ionicons
+          name="refresh-outline"
+          size={24}
+          color="#FFF"
+          style={{ marginRight: 10 }}
+        />
         <ThemedText style={styles.playAgainText}>PLAY AGAIN</ThemedText>
       </TouchableOpacity>
     </View>

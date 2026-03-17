@@ -1,4 +1,4 @@
-import { ThemedText } from "@/components/themed-text";
+import { ThemedText } from "@/components/common/themed-text";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useAudioPlayer } from "expo-audio";
 import { useEffect, useRef } from "react";
@@ -12,7 +12,8 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { useGameContext, useTurnContext } from "../../context/GameContext";
+import { useGameContext } from "../../context/GameContext";
+import { useTurnContext } from "../../context/TurnContext";
 
 const TICK_SOUND = "https://actions.google.com/sounds/v1/alarms/beep_short.ogg";
 const END_SOUND =

@@ -1,82 +1,25 @@
-import { createContext, ReactNode, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState, ReactNode } from "react";
 import { Animated, PanResponder } from "react-native";
-import { GameSettings, GameState } from "../types/game";
-
-// ==========================================
-// 1. GAME CONTEXT (Cross-turn global state)
-// ==========================================
-
-export interface GameContextType {
-  settings: GameSettings;
-  gameState: GameState;
-  currentGroup: number;
-  groupScores: number[];
-  currentWord: string;
-  currentWords: string[];
-  currentWordIndex: number;
-  isDark: boolean;
-  chipBorderColor: string;
-  chipBgActive: string;
-  onStartTurn: () => void;
-  onProceedToNextGroup: () => void;
-  onReturnToSetup: () => void;
-  lastWordWinner: number | null;
-  assignLastWordPoint: (groupIndex: number | null) => void;
-}
-
-export const GameContext = createContext<GameContextType | undefined>(undefined);
-
-export function useGameContext() {
-  const context = useContext(GameContext);
-  if (!context) throw new Error("useGameContext must be used within GameContext.Provider");
-  return context;
-}
-
-// ==========================================
-// 2. TURN CONTEXT (Fast ephemeral UI state)
-// ==========================================
-
-export interface TurnContextType {
-  timeLeft: number;
-  turnScore: number;
-  swipeHistory: ("left" | "right")[];
-  pan: Animated.ValueXY;
-  panResponderHandlers: any;
-  undoSwipe: () => void;
-  toggleSwipe: (index: number) => void;
-  isLastWordMode: boolean;
-  onTurnEnd: () => void;
-  showWinnerModal: boolean;
-  setShowWinnerModal: (show: boolean) => void;
-}
+import { GameState } from "../../types/game";
+import { TurnContextType } from "./types";
+import { useGameContext } from "../GameContext";
 
 export const TurnContext = createContext<TurnContextType | undefined>(undefined);
 
-export function useTurnContext() {
-  const context = useContext(TurnContext);
-  if (!context) throw new Error("useTurnContext must be used within TurnProvider");
-  return context;
-}
-
-interface TurnProviderProps {
+export interface TurnProviderProps {
   children: ReactNode;
-  gameState: GameState;
-  roundTimer: number;
-  onTurnEnd: (score: number) => void;
-  onWordSwipe: (dir: "left" | "right", isUndo?: boolean) => void;
-  onToggleSwipe?: (diff: number) => void;
-  lastWordForAll: boolean;
 }
 
-export function TurnProvider({
-  children,
-  gameState,
-  roundTimer,
-  onTurnEnd,
-  onWordSwipe,
-  onToggleSwipe,
-  lastWordForAll,
-}: TurnProviderProps) {
+export function TurnProvider({ children }: TurnProviderProps) {
+  const {
+    gameState,
+    settings,
+    onEndTurn,
+    onWordSwipe,
+    onUpdateGroupScore,
+  } = useGameContext();
+
+  const { roundTimer, lastWordForAll } = settings;
   const [turnScore, setTurnScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
   const [isLastWordMode, setIsLastWordMode] = useState(false);
@@ -92,14 +35,11 @@ export function TurnProvider({
     setSwipeHistory((prev) => [...prev, direction]);
     
     if (direction === "right") {
-      // In Last Word Mode, success doesn't add a point to the turn score.
-      // The point is awarded manually to the winning team at turn end.
       if (!isLastWordMode) {
         setTurnScore((s) => s + 1);
         turnScoreRef.current += 1;
       }
     } else {
-      // Skip always subtracts a point
       setTurnScore((s) => s - 1);
       turnScoreRef.current -= 1;
     }
@@ -108,8 +48,7 @@ export function TurnProvider({
       if (direction === "right") {
         setShowWinnerModal(true);
       } else {
-        // Skip in last word mode ends turn immediately but with loss of point (handled above)
-        setTimeout(() => onTurnEnd(turnScoreRef.current), 50);
+        setTimeout(() => onEndTurn(turnScoreRef.current), 50);
       }
     }
     
@@ -135,7 +74,6 @@ export function TurnProvider({
 
   useEffect(() => {
     if (gameState === GameState.Ready || gameState === GameState.Playing) {
-      // Re-initialize for BOTH Ready and Playing to ensure clean state before GamePlaying mounts
       if (gameState === GameState.Ready) {
         setTurnScore(0);
         turnScoreRef.current = 0;
@@ -158,7 +96,7 @@ export function TurnProvider({
               setIsLastWordMode(true);
               return 0;
             } else {
-              setTimeout(() => onTurnEnd(turnScoreRef.current), 0);
+              setTimeout(() => onEndTurn(turnScoreRef.current), 0);
               return 0;
             }
           }
@@ -167,7 +105,7 @@ export function TurnProvider({
       }, 1000);
     }
     return () => clearInterval(timer);
-  }, [gameState, timeLeft, onTurnEnd, lastWordForAll]);
+  }, [gameState, timeLeft, onEndTurn, lastWordForAll]);
 
   const undoSwipe = () => {
     if (swipeHistory.length === 0) return;
@@ -194,7 +132,7 @@ export function TurnProvider({
       const scoreDiff = newSwipe === "right" ? 2 : -2;
       setTurnScore((s) => s + scoreDiff);
       turnScoreRef.current += scoreDiff;
-      onToggleSwipe?.(scoreDiff);
+      onUpdateGroupScore(scoreDiff);
 
       return newHistory;
     });
@@ -211,7 +149,7 @@ export function TurnProvider({
         undoSwipe,
         toggleSwipe,
         isLastWordMode,
-        onTurnEnd: () => onTurnEnd(turnScoreRef.current),
+        onTurnEnd: () => onEndTurn(turnScoreRef.current),
         showWinnerModal,
         setShowWinnerModal,
       }}
@@ -219,4 +157,10 @@ export function TurnProvider({
       {children}
     </TurnContext.Provider>
   );
+}
+
+export function useTurnContext() {
+  const context = useContext(TurnContext);
+  if (!context) throw new Error("useTurnContext must be used within TurnProvider");
+  return context;
 }
