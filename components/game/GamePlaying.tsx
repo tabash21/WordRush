@@ -99,8 +99,8 @@ export function GamePlaying() {
       useNativeDriver: false,
     }).start();
 
-    // 2. Audio: Tick sound for last 5 seconds
-    if (timeLeft <= 5 && timeLeft > 0) {
+    // 2. Audio: Tick sound for last 3 seconds
+    if (timeLeft <= 3 && timeLeft > 0) {
       tickPlayer.play();
       tickPlayer.seekTo(0);
     }
@@ -244,7 +244,7 @@ export function GamePlaying() {
       <View style={styles.undoContainer}>
         {isLastWordMode ? (
           <View style={styles.lastWordInstructions}>
-            <ThemedText style={styles.instructionText}>ALL TEAMS GUESS!</ThemedText>
+            <ThemedText style={styles.instructionText}>ALL TEAMS CAN GUESS!</ThemedText>
             <ThemedText style={styles.instructionSubText}>Swipe when someone wins</ThemedText>
           </View>
         ) : canUndo ? (

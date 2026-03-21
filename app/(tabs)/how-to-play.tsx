@@ -115,6 +115,9 @@ export default function HowToPlayScreen() {
               <ThemedText style={styles.settingInfo}>
                 When time expires, all teams can guess the word and earn the point.
               </ThemedText>
+              <ThemedText style={styles.settingInfoHighlight}>
+                Sounds on to hear the last 3 seconds of the timer.
+              </ThemedText>
             </View>
           </View>
         </View>
@@ -249,6 +252,11 @@ const styles = StyleSheet.create({
   settingInfo: {
     fontSize: 13,
     color: "#888",
+    lineHeight: 18,
+  },
+  settingInfoHighlight: {
+    fontSize: 13,
+    color: "#e74c3c",
     lineHeight: 18,
   },
   winCard: {
