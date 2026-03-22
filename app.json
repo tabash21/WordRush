@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "AliRush",
-    "slug": "AliRush",
+    "name": "WordRush",
+    "slug": "WordRush",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/aliRush-squre.png",
-    "scheme": "alirush",
+    "icon": "./assets/images/wordRush-squre.png",
+    "scheme": "wordrush",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true
@@ -13,23 +13,23 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/aliRush-squre.png",
-        "backgroundImage": "./assets/images/aliRush-squre.png",
-        "monochromeImage": "./assets/images/aliRush-squre.png"
+        "foregroundImage": "./assets/images/wordRush-squre.png",
+        "backgroundImage": "./assets/images/wordRush-squre.png",
+        "monochromeImage": "./assets/images/wordRush-squre.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.tal_ben_shushan.aliRush"
+      "package": "com.tal_ben_shushan.wordRush"
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/aliRush-squre.png"
+      "favicon": "./assets/images/wordRush-squre.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/aliRush-squre.png",
+          "image": "./assets/images/wordRush-squre.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff",

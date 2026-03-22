@@ -17,7 +17,7 @@ export default function HomeScreen() {
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
       headerImage={
-        <Image source={require("@/assets/images/aliRush.png")} style={styles.reactLogo} />
+        <Image source={require("@/assets/images/wordRush.png")} style={styles.reactLogo} />
       }
     >
       <GameSetup settings={settings} setSettings={setSettings} onStartGame={onStartGame} />

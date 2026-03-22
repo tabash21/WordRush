@@ -1,6 +1,6 @@
-# Welcome to AliRush Game 👋
+# Welcome to WordRush Game 👋
 
-AliRush Game
+WordRush Game
 
 ## Get started
 
